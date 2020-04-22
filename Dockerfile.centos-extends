@@ -1,0 +1,47 @@
+FROM daggerok/jboss-eap-7.3:7.3.0-centos
+LABEL MAINTAINER="Maksim Kostromin <daggerok@gmail.com>"
+ENV PRODUCT="jboss-eap-7.3"                                                                     \
+    JBOSS_USER="jboss"
+ENV JBOSS_USER_HOME="/home/${JBOSS_USER}"                                                       \
+    DOWNLOAD_BASE_URL="https://github.com/daggerok/${PRODUCT}/releases/download"                \
+    JBOSS_EAP_PATCH="7.3.0"
+ENV JBOSS_HOME="${JBOSS_USER_HOME}/${PRODUCT}"                                                  \
+    PATCHES_BASE_URL="${DOWNLOAD_BASE_URL}/${JBOSS_EAP_PATCH}"
+ENV PATH="${JBOSS_HOME}/bin:/tmp:${PATH}"                                                       \
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk"                                                 \
+    JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0"
+USER ${JBOSS_USER}
+RUN sudo yum update --security -y                                                               \
+ && sudo yum update -y
+WORKDIR /tmp
+ADD --chown=jboss ./install.sh .
+RUN ( standalone.sh --admin-only                                                                \
+      & ( sudo chmod +x /tmp/install.sh                                                         \
+          && install.sh                                                                         \
+          && sudo yum autoremove -y                                                             \
+          && sudo yum clean all -y                                                              \
+          && sudo rm -rf /tmp/*  ) )
+WORKDIR ${JBOSS_USER_HOME}
+
+############################################ USAGE ##############################################
+#                                                                                               #
+# FROM daggerok/jboss-eap-7.3:7.3.0-centos                                                     #
+#                                                                                               #
+# # debug:                                                                                      #
+# ENV JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" #
+# EXPOSE 5005                                                                                   #
+#                                                                                               #
+# # health-check:                                                                               #
+# HEALTHCHECK --retries=33 \                                                                    #
+#             --timeout=1s \                                                                    #
+#             --interval=1s \                                                                   #
+#             --start-period=3s \                                                               #
+#             CMD  wget -q --spider http://127.0.0.1:8080/my-service/health || exit 1           #
+#             #CMD curl -f http://127.0.0.1:8080/my-servicehealth           || exit 1           #
+#             #CMD test `netstat -ltnp | grep 9990 | wc -l` -ge 1           || exit 1           #
+# COPY --chown=jboss ./target/*.war ${JBOSS_HOME}/standalone/deployments/my-service.war         #
+#                                                                                               #
+# # or multi-deployment:                                                                        #
+# COPY --chown=jboss ./target/*.war ./build/libs/*.war ${JBOSS_HOME}/standalone/deployments/    #
+#                                                                                               #
+#################################################################################################
