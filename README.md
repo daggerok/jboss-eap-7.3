@@ -13,7 +13,7 @@ JBoss EAP 7.3 Docker automation build based on centos8 / alpine3 images
 ## usage
 
 ```Dockerfile
-FROM daggerok/jboss-eap-7.3:7.3.0-alpine
+FROM daggerok/jboss-eap-7.3:7.3.0-debian
 COPY --chown=jboss ./target/*.war ${JBOSS_HOME}/standalone/deployments/my-service.war
 ```
 
@@ -71,6 +71,9 @@ git tag 7.3.0-centos
 git push origin --tags
 
 git tag 7.3.0-alpine
+git push origin --tags
+
+git tag 7.3.0-debian
 git push origin --tags
 
 -->

@@ -13,7 +13,7 @@ env:
   - DOCKER_IMAGE_NAME=jboss-eap-7.3
   - secure: "Yas+0gZOHWZYIn4ce062J2SVW8/SJsWc8uggE7EGF73qp9qP2JZXy1U77Wn6FiNYYwNzmbdcYVt0L4+mzc/tSAGnl6U7YvYGSmBFmNz84DalOxGebGHVWLNiQKNMshNa5HwUcm+J1rPB7Hu9Xn41MfWZIM0duCNx92+WkYPz3ea2A5MNhk3GTAnsf23vtdXnGJw1U8a5Ibcmf80DI2H2tMFUKJ97XAtFCkBtBiWq29AVPSkMMVbNv3DZWC4zl7fKuuMKZDyQyfMSpROxsEv66+Z5BYYUSqG9m0Lqcsg7FWfMK4gHsxbD1IdPyPq15ymclBNQTQbKjfEJGFZO0zPnXihxYXfA0r+pkcnkVAKrxopp3vcFW9fuZI4RJ5B5d+5ZUmDp0kzthzPXcVXOh8aXq7YBp8a6uxC/0M6bfvgYFfeXGxgH2Im+M5SXBiKJACgDjOIbN5Szb5XckQHmxZkzAt9Lm2XnXDhxbpgHeE4kXgEQILFXw7tIMJDozXClyoOffVzJrGmqmx9+qZde7FaTjWaD4yQUkDqslRlkJWKc1noibG0KbsLRY3HaXv+A3qctIAI1NNJK26FHi/IgwvNzS2P+bD+LCMdAxat4CKEC0SyRzjAyHEffDkLv8HrDUf4HkW2/sejNe0nAAdUft9Fg+Q+0t4SASsdEBfZGKTW8Fos="
 install: true
-if: tag ~= alpine$ OR tag ~= centos$ OR branch == master
+if: tag ~= debian$ OR tag ~= alpine$ OR tag ~= centos$ OR branch == master
 script:
 - docker system prune -af --volumes
 - docker build -t ${DOCKER_USERNAME}/${DOCKER_IMAGE_NAME} .
