@@ -32,10 +32,11 @@ RUN wget ${ARCHIVES_BASE_URL}/jboss-eap-7.3.0.zip                               
     ( standalone.sh --admin-only                                                                \
       & ( sudo chmod +x /tmp/install.sh                                                      && \
           install.sh                                                                         && \
-          sudo apt-get purge -y unzip openssh-client                                         && \
+          sudo apt-get remove -y --purge --auto-remove unzip openssh-client ca-certificates  && \
           sudo apt-get autoremove -y                                                         && \
           sudo apt-get autoclean -y                                                          && \
-          ( sudo rm -rf /tmp/* || echo "cleanup!" ) ) )
+          sudo apt-get clean -y                                                              && \
+          ( sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* || echo "cleanup!" ) ) )
 WORKDIR ${JBOSS_USER_HOME}
 
 ############################################ USAGE ##############################################
